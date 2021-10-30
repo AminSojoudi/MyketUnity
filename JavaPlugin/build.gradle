@@ -1,0 +1,60 @@
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.2'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        jcenter()
+    }
+}
+
+
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.3"
+
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+    }
+
+    compileOptions
+            {
+                sourceCompatibility JavaVersion.VERSION_1_6
+                targetCompatibility JavaVersion.VERSION_1_6
+            }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+}
+
+task deleteJar(type : Delete){
+    delete 'MyketIAB.jar'
+}
+
+task createJar(type : Copy){
+    from ('build/intermediates/packaged-classes/release/')
+    into ('build')
+    include ('classes.jar')
+    rename ('classes.jar','MyketIAB.jar')
+}
+
+createJar.dependsOn(deleteJar, build)
